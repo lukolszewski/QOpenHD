@@ -9,7 +9,8 @@
 #include <QtQml>
 
 #include "openhdvideo.h"
-#include "openhdrender.h"
+//#include "openhdrender.h"
+#include "openhdandroidrender.h"
 
 #include <media/NdkMediaCodec.h>
 
@@ -17,14 +18,14 @@
 class OpenHDAndroidVideo : public OpenHDVideo
 {
     Q_OBJECT
-    Q_PROPERTY(OpenHDRender *videoOut READ videoOut WRITE setVideoOut NOTIFY videoOutChanged)
+    Q_PROPERTY(OpenHDAndroidRender *videoOut READ videoOut WRITE setVideoOut NOTIFY videoOutChanged)
 
 public:
     OpenHDAndroidVideo(enum OpenHDStreamType stream_type = OpenHDStreamTypeMain);
     virtual ~OpenHDAndroidVideo() override;
 
-    OpenHDRender *videoOut() const;
-    Q_INVOKABLE void setVideoOut(OpenHDRender *videoOut);
+    OpenHDAndroidRender *videoOut() const;
+    Q_INVOKABLE void setVideoOut(OpenHDAndroidRender *videoOut);
 
 
     void start() override;
@@ -41,7 +42,7 @@ signals:
 
 private:
 
-    QPointer<OpenHDRender> m_videoOut;
+    QPointer<OpenHDAndroidRender> m_videoOut;
 
     AMediaCodec* codec = nullptr;
     AMediaFormat *format = nullptr;

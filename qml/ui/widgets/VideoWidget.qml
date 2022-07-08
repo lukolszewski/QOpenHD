@@ -9,7 +9,7 @@ Loader {
         }
 
         if (IsAndroid && EnableVideoRender && EnablePiP) {
-            return "VideoWidgetRenderForm.ui.qml"
+            return "VideoWidgetAndroidForm.ui.qml"
         }
 
         if (IsRaspPi && EnableVideoRender && EnablePiP) {
