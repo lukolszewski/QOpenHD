@@ -4,7 +4,7 @@
 #include <QtConcurrent>
 #include <QtQuick>
 #include <QAndroidJniEnvironment>
-#include <QAndroidJniObject>
+//#include <QAndroidJniObject>
 #include <QThread>
 #include <QUdpSocket>
 #include <QtConcurrent>
@@ -26,7 +26,7 @@
 #include <android/window.h>
 
 #include "openhdandroidvideo.h"
-#include "openhdrender.h"
+#include "openhdandroidrender.h"
 #include "constants.h"
 #include "localmessage.h"
 
@@ -65,11 +65,11 @@ void OpenHDAndroidVideo::stop() {
     }
 }
 
-OpenHDRender* OpenHDAndroidVideo::videoOut() const {
+OpenHDAndroidRender* OpenHDAndroidVideo::videoOut() const {
     return m_videoOut;
 }
 
-void OpenHDAndroidVideo::setVideoOut(OpenHDRender *videoOut) {
+void OpenHDAndroidVideo::setVideoOut(OpenHDAndroidRender *videoOut) {
     qDebug() << "OpenHDAndroidVideo::setVideoOut()";
     if (m_videoOut == videoOut) {
         return;
@@ -84,16 +84,18 @@ void OpenHDAndroidVideo::setVideoOut(OpenHDRender *videoOut) {
     auto setSurfaceTexture = [=] {
         QAndroidJniEnvironment env;
 
-        window = ANativeWindow_fromSurface(env, m_videoOut->surfaceTexture()->surface());
+        QAndroidJniObject surface("android/view/Surface",
+                                          "(Landroid/graphics/SurfaceTexture;)V",
+                                           m_videoOut->surfaceTexture().object());
+
+                window = ANativeWindow_fromSurface(env, surface.object());
     };
 
 
-    bool surfaceValid = videoOut->surfaceTexture()->isValid();
-
-    if (surfaceValid) {
+    if (videoOut->surfaceTexture().isValid()) {
         setSurfaceTexture();
     } else {
-        connect(m_videoOut.data(), &OpenHDRender::surfaceTextureChanged, this, setSurfaceTexture);
+        connect(m_videoOut.data(), &OpenHDAndroidRender::surfaceTextureChanged, this, setSurfaceTexture);
     }
 
     emit videoOutChanged();
@@ -108,11 +110,11 @@ void OpenHDAndroidVideo::androidConfigure() {
     qDebug() << "OpenHDAndroidVideo::androidConfigure()";
     qDebug() << t;
 
+    QAndroidJniObject surface("android/view/Surface", "(Landroid/graphics/SurfaceTexture;)V", m_videoOut->surfaceTexture().object());
+
     media_status_t status;
 
     codec = AMediaCodec_createDecoderByType("video/avc");
-
-    m_videoOut.data()->setVideoSize(QSize(width, height));
 
     format = AMediaFormat_new();
     AMediaFormat_setString(format, AMEDIAFORMAT_KEY_MIME, "video/avc");

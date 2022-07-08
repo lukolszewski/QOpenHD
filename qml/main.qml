@@ -168,7 +168,7 @@ ApplicationWindow {
                 return "MainVideoGStreamer.qml";
             }
             if (IsAndroid && EnableVideoRender && EnableMainVideo) {
-                return "MainVideoRender.qml";
+                return "MainVideoAndroid.qml";
             }
             if (IsRaspPi && EnableVideoRender && EnableMainVideo) {
                 return "MainVideoRender.qml";
