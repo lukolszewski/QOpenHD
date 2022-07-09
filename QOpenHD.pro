@@ -372,7 +372,7 @@ AndroidBuild {
     CONFIG += EnablePiP
     #CONFIG += EnableLink
     CONFIG += EnableVideoRender
-    CONFIG += EnableCharts
+    #CONFIG += EnableCharts
     CONFIG += EnableADSB
     #CONFIG += EnableBlackbox
 
