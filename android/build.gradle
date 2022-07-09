@@ -35,6 +35,12 @@ android {
      * Changing them manually might break the compilation!
      *******************************************************/
 
+    defaultConfig {
+            ndk {
+                abiFilters 'armeabi-v7a'
+            }
+        }
+
     compileSdkVersion androidCompileSdkVersion.toInteger()
 
     buildToolsVersion '28.0.3'
