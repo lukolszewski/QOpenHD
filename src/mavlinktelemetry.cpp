@@ -33,9 +33,12 @@ MavlinkTelemetry* MavlinkTelemetry::instance() {
 
 MavlinkTelemetry::MavlinkTelemetry(QObject *parent): MavlinkBase(parent) {
     qDebug() << "MavlinkTelemetry::MavlinkTelemetry()";
-    targetSysID = 1;
+    targetSysID1 = 1;
+    targetSysID2 = 0;
     targetCompID1 = MAV_COMP_ID_AUTOPILOT1;
     targetCompID2 = MAV_COMP_ID_SYSTEM_CONTROL;
+    // betaflight
+    targetCompID3 = 200;
 
     localPort = 14550;
 
@@ -290,6 +293,8 @@ void MavlinkTelemetry::onProcessMavlinkMessage(mavlink_message_t msg) {
             OpenHD::instance()->setRCChannel7(rc_channels.chan7_raw);
             OpenHD::instance()->setRCChannel8(rc_channels.chan8_raw);
 
+            auto rssi = static_cast<int>(static_cast<double>(rc_channels.rssi) / 255.0 * 100.0);
+            OpenHD::instance()->set_rc_rssi(rssi);
 
             /*qDebug() << "RC: " << rc_channels.chan1_raw
                                  << rc_channels.chan2_raw

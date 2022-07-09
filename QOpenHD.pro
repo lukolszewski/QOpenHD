@@ -469,8 +469,10 @@ installer {
 
     }
     AndroidBuild {
-        QMAKE_POST_LINK += mkdir -p $${DESTDIR}/package
-        QMAKE_POST_LINK += && make install INSTALL_ROOT=$${DESTDIR}/android-build/
+        DESTDIR_WIN = $$replace(DESTDIR, "/", "\\")
+
+        QMAKE_POST_LINK += if not exist \"$${DESTDIR_WIN}\\package\" mkdir $${DESTDIR_WIN}\\package
+        QMAKE_POST_LINK += $$escape_expand(\\n)$$escape_expand(\\t)"C:\Users\UserOne\AppData\Local\Android\Sdk\ndk\21.3.6528147\prebuilt\windows-x86_64\bin\make.exe" install INSTALL_ROOT=$${DESTDIR_WIN}\\android-build\\
     }
 }
 
